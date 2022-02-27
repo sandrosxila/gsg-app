@@ -4,9 +4,12 @@ simple CRUD app
 
 ## Setup
 
-Use [docker-compose](https://docs.docker.com/compose/) to start server:
+Use [npm](https://www.npmjs.com/) and [docker-compose](https://docs.docker.com/compose/) to start server:
 
 ```bash
+cd ./server
+npm install
+cd ..
 docker-compose up -d --build
 ```
 
