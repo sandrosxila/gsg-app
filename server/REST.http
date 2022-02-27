@@ -1,0 +1,99 @@
+POST http://localhost:5000/auth/register
+Content-Type: application/json
+
+{
+    "fullName": "John Doe",
+    "username": "test1234",
+    "password": "12345678$Test"
+}
+
+###
+
+POST http://localhost:5000/auth/login
+Content-Type: application/json
+
+{
+    "username": "test1234",
+    "password": "12345678$Test"
+}
+
+
+###
+
+POST http://localhost:5000/auth/token
+Content-Type: application/json
+X-Auth-Token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InRlc3QxMjM0IiwiaWF0IjoxNjQ1NjQ2NjAwLCJleHAiOjE2NDU2NDY5MDB9.uE4uVHF4Xn_a_AYSjRUD5h5fv47TDr3oy6IjZpJVHis
+
+{
+    "username": "test1234"
+}
+
+###
+
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "fullName": "Nick Jones",
+    "username": "njones",
+    "password": "Pa$$.123"
+}
+
+###
+
+POST http://localhost:5000/users
+Content-Type: application/json
+
+{
+    "fullName": "John Doe",
+    "username": "test1234",
+    "password": "12345678$Test"
+}
+
+
+###
+
+POST http://localhost:5000/products
+Content-Type: application/json
+
+{
+    "username": "njones",
+    "name": "Test Product 1",
+    "price": "100.00",
+    "weight": "12"
+}
+
+###
+
+POST http://localhost:5000/products
+Content-Type: application/json
+
+{
+    "username": "test1234",
+    "name": "Test Product 2",
+    "price": "100.00",
+    "weight": "12"
+}
+
+
+###
+
+GET http://localhost:5000/products/njones
+Content-Type: application/json
+
+###
+
+GET http://localhost:5000/products/
+Content-Type: application/json
+
+###
+
+PUT http://localhost:5000/products/621b57835e87480573d06b4c
+Content-Type: application/json
+
+{
+    "username": "njones",
+    "name": "Test Product 1",
+    "price": "100.00",
+    "weight": "14"
+}

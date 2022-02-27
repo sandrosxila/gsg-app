@@ -1,0 +1,37 @@
+version: '3.8'
+services:
+  api-server:
+    build: ./server
+    volumes:
+      - ./server:/usr/src/app
+    ports:
+      - "5000:5000"
+    networks:
+        - gsg-app
+    environment:
+      DB_HOST: mongo
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:5.0.6
+    container_name: mongodb
+    command: mongod --auth
+    ports:
+      - "27017:27017"
+    networks:
+        - gsg-app
+    volumes:
+      - mongo-data:/data/db
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+      
+networks:
+  gsg-app:
+    driver: bridge
+
+volumes:
+  mongo-data:
+    driver: local
