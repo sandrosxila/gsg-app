@@ -6,7 +6,7 @@ import { call, CallEffect, put, PutEffect, takeLatest } from 'redux-saga/effects
 export function* loginRequest(action: Login): Generator<CallEffect | PutEffect, void, { data: { accessToken: string, expiresAt: number, refreshToken: string } }> {
     try{
         const response = yield call(axios.post, '/auth/login', action.payload, { headers: { 'Content-Type': 'application/json' } });
-
+        
         localStorage.setItem('access-token', response.data.accessToken);
         localStorage.setItem('expires-at', response.data.expiresAt.toString());
         localStorage.setItem('refresh-token', response.data.refreshToken);

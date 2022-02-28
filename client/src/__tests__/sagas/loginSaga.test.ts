@@ -1,8 +1,9 @@
-import { call, takeLatest } from 'redux-saga/effects';
-import { Login } from '../../actions/authTypes';
+import { takeLatest } from 'redux-saga/effects';
+import { LOGIN_SUCCESS } from '../../actions/authTypes';
 import loginSaga from '../../sagas/loginSaga';
 import { loginRequest } from '../../sagas/loginSaga';
 import axios from 'axios';
+import { runSaga } from 'redux-saga';
 
 describe('loginSaga', () => {
     const genLoginSaga = loginSaga();
@@ -17,25 +18,84 @@ describe('loginSaga', () => {
 });
 
 describe('loginRequest', () => {
-    const getLoginRequest = loginRequest({ payload: { username: 'test', password:'Te$t.123321' } } as Login);
-    // let axiosPostSpy: jest.SpyInstance;
-    // let localStorageSpy: jest.SpyInstance;
-    let expirationTime: number;
-    let response: { data: { accessToken: string, expiresAt: number, refreshToken: string } };
+    
+    let dispatched: unknown[] = [];
+    const action = { 
+        type: 'LOGIN' as const,
+        payload: {
+            username: 'njones',
+            password: 'Pa$$.123'
+        } 
+    };
+
+    beforeAll(() => {
+        jest.spyOn(window.localStorage.__proto__, 'setItem');
+        window.localStorage.__proto__.setItem = jest.fn();
+    });
+
     beforeEach(() => {
-        response = {
+        dispatched = [];
+
+    });
+
+    test('should call api and dispatch success action', async () => {
+        const expirationTime = Date.now() + (15 * 60 * 1000);
+        const response = {
             data: { 
                 accessToken: 'access-token', 
                 expiresAt: expirationTime, 
                 refreshToken: 'refresh-token' 
             } 
         };
-        expirationTime = Date.now();
+        const axiosPostSpy = jest.spyOn(axios, 'post').mockImplementation(() => Promise.resolve(response));
+
+        await runSaga({
+            dispatch: (action) => { dispatched.push(action); }
+        }, loginRequest as any, action).toPromise(); // eslint-disable-line
+        
+        expect(axiosPostSpy).toHaveBeenCalledTimes(1);
+        
+        expect(localStorage.setItem).toHaveBeenCalledWith('access-token', 'access-token');
+        expect(localStorage.setItem).toHaveBeenCalledWith('expires-at', expirationTime.toString());
+        expect(localStorage.setItem).toHaveBeenCalledWith('refresh-token', 'refresh-token');
+        
+        expect(dispatched).toEqual([{
+            payload:{
+                username: 'njones',
+            },
+            type: LOGIN_SUCCESS,
+        }]);
+
+        axiosPostSpy.mockClear();
     });
 
-    test('should call axios.post with correct params', () => {
-        expect(getLoginRequest.next(response).value)
-            .toEqual(call(axios.post, '/auth/login', { username: 'test', password: 'Te$t.123321' }, { headers: { 'Content-Type': 'application/json' } }));
-    });
 
+    test('should call api and dispatch failure action', async () => {
+        const error = {
+            response: { 
+                data:{
+                    errors: [
+                        { message: 'Invalid credentials' }
+                    ]
+                }
+            } 
+        };
+        const axiosPostSpy = jest.spyOn(axios, 'post').mockRejectedValue(error);
+
+
+        await runSaga({
+            dispatch: (action) => { dispatched.push(action); }
+        }, loginRequest as any, action).toPromise(); // eslint-disable-line
+
+        expect(axiosPostSpy).toHaveBeenCalledTimes(1);
+
+        expect(dispatched).toEqual([{
+            type: 'LOGIN_FAILURE',
+            payload: [
+                { message: 'Invalid credentials' }
+            ]
+        }]);
+
+        axiosPostSpy.mockClear();
+    });
 });
