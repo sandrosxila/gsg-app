@@ -59,8 +59,13 @@ describe('<Login/>', () => {
                 },
                 isUserLoggedIn: true,
                 errors: [],
-            } 
-        };
+            },
+            user: {
+                id: '',
+                fullName: '',
+                username: ''
+            }
+        };    
 
         beforeEach(() => {
             reduxRender(
