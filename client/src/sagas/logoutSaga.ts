@@ -3,7 +3,7 @@ import { call, CallEffect, put, PutEffect, takeLatest } from 'redux-saga/effects
 import { LOGOUT } from '../actions/authTypes';
 import axios from 'axios';
 
-function* logoutRequest(): Generator<CallEffect | PutEffect, void, void> {
+export function* logoutRequest(): Generator<CallEffect | PutEffect, void, void> {
     try{
         yield call(axios.delete, '/auth/logout', { headers: { 'X-Auth-Token': `${localStorage.getItem('refresh-token')}` } });
         localStorage.removeItem('access-token');

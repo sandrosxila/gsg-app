@@ -35,7 +35,6 @@ describe('loginRequest', () => {
 
     beforeEach(() => {
         dispatched = [];
-
     });
 
     test('should call api and dispatch success action', async () => {
