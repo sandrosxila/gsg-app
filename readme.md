@@ -29,9 +29,9 @@ use [npm](https://www.npmjs.com/) to test front-end:
 npm test
 ```
 
-## End
+## Shutting Down
 
-Use [docker-compose](https://docs.docker.com/compose/) to end server:
+Use [docker-compose](https://docs.docker.com/compose/) to shut the server down:
 
 ```bash
 docker-compose down
