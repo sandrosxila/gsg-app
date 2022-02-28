@@ -7,7 +7,7 @@ describe('logout', () => {
     const genLogoutSaga = logoutSaga();
 
     test('should wait for latest LOGOUT action and call logoutRequest', () => {
-        expect(genLogoutSaga.next().value).toEqual(takeLatest('LOGOUT_REQUEST', logoutRequest));
+        expect(genLogoutSaga.next().value).toEqual(takeLatest('LOGOUT', logoutRequest));
     });
     
 });
