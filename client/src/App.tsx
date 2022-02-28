@@ -17,7 +17,12 @@ function App() {
 
     useEffect(() => {
         if (expiresAt) {
-            timer.current = setTimeout(() => {
+            if(timer.current) {
+                clearInterval(timer.current);
+            }
+            timer.current = setInterval(() => {
+                console.log('sending');
+
                 if(expiresAt && expiresAt * 1000 < Date.now()) {
                     dispatch({ type: REFRESH_TOKEN_REQUEST });
                 }
@@ -26,7 +31,7 @@ function App() {
         
         return () => {
             if(timer.current) {
-                clearTimeout(timer.current);
+                clearInterval(timer.current);
             }
         };
     }, [dispatch, expiresAt]);
